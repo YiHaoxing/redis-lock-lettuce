@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author YiHaoXing
  * @version 1.0.0
  * @className com.test.demo.DemoApplication
- * @description TODO
+ * @description 启动类
  * @date 2019/6/15 10:05
  */
 @SpringBootApplication

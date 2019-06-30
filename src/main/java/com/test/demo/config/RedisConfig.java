@@ -14,20 +14,17 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import javax.annotation.Resource;
-
 /**
  * @author YiHaoXing
  * @version 1.0.0
  * @className com.test.demo.config.Redis
- * @description TODO
+ * @description Redis配置类
  * @date 2019/6/15 10:17
  */
 @Slf4j
@@ -75,18 +72,18 @@ public class RedisConfig extends CachingConfigurerSupport {
     public RedisTemplate<String, String> redisTemplate() {
         RedisTemplate redisTemplate = new RedisTemplate();
         redisTemplate.setConnectionFactory(lettuceConnectionFactory);
-        //使用Jackson2JsonRedisSerialize 替换默认序列
+
+        //使用StringRedisSerializer来序列化和反序列化redis的key值
+        RedisSerializer redisSerializer = new StringRedisSerializer();
+        redisTemplate.setKeySerializer(redisSerializer);
+        redisTemplate.setHashKeySerializer(redisSerializer);
+
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
-        //使用StringRedisSerializer来序列化和反序列化redis的key值
-        RedisSerializer redisSerializer = new StringRedisSerializer();
-        //key
-        redisTemplate.setKeySerializer(redisSerializer);
-        redisTemplate.setHashKeySerializer(redisSerializer);
-        //使用Jackson2JsonRedisSerialize来序列化value
+        //使用jackson2JsonRedisSerializer来序列化和反序列化redis的value值
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.afterPropertiesSet();
@@ -94,10 +91,10 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     /**
+     * @return org.springframework.cache.interceptor.CacheErrorHandler
      * @author YiHaoXing
      * @description 异常处理。防止因为Redis异常导致程序中断影响原本业务流程
      * @date 1:17 2019/6/29
-     * @return org.springframework.cache.interceptor.CacheErrorHandler
      **/
     @Bean
     @Override
@@ -105,22 +102,22 @@ public class RedisConfig extends CachingConfigurerSupport {
         CacheErrorHandler cacheErrorHandler = new CacheErrorHandler() {
             @Override
             public void handleCacheGetError(RuntimeException e, Cache cache, Object o) {
-                log.error("Redis exception: {}",e.getMessage());
+                log.error("Redis exception: {}", e.getMessage());
             }
 
             @Override
             public void handleCachePutError(RuntimeException e, Cache cache, Object o, Object o1) {
-                log.error("Redis exception: {}",e.getMessage());
+                log.error("Redis exception: {}", e.getMessage());
             }
 
             @Override
             public void handleCacheEvictError(RuntimeException e, Cache cache, Object o) {
-                log.error("Redis exception: {}",e.getMessage());
+                log.error("Redis exception: {}", e.getMessage());
             }
 
             @Override
             public void handleCacheClearError(RuntimeException e, Cache cache) {
-                log.error("Redis exception: {}",e.getMessage());
+                log.error("Redis exception: {}", e.getMessage());
             }
         };
         return cacheErrorHandler;

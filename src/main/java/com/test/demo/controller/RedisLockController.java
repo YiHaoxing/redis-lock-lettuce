@@ -34,17 +34,40 @@ public class RedisLockController {
         return "Hello World";
     }
 
+    /**
+     * @param []
+     * @return java.lang.String
+     * @author YiHaoXing
+     * @description 方法代码里加锁
+     * @date 16:54 2019/6/30
+     **/
     @GetMapping("/B")
     public String testRedisLock2() {
-
-        if(redisLockUtils.getLock("F", "VALUE-F",10000)){
+        if (redisLockUtils.getLock("F", "VALUE-F", 10000)) {
             try {
                 System.out.println(redisTemplate.opsForValue().get("F"));
             } catch (Exception e) {
-                //TODO
+                //do something.
             } finally {
                 //释放锁
-                redisLockUtils.releaseLock("F","VALUE-F");
+                redisLockUtils.releaseLock("F", "VALUE-F");
+            }
+        }
+        return "Hello World";
+    }
+
+
+    @GetMapping("/C")
+    public String testRedisLock3() {
+        boolean lock = redisLockUtils.getLockByLua("G", "VALUE-G", 30000);
+        if (lock) {
+            try {
+                System.out.println(redisTemplate.opsForValue().get("G"));
+            } catch (Exception e) {
+                //do something.
+            } finally {
+                //释放锁
+                redisLockUtils.releaseLock("F", "VALUE-F");
             }
         }
         return "Hello World";
