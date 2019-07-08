@@ -1,4 +1,4 @@
-package com.test.demo.config;
+package com.demo.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

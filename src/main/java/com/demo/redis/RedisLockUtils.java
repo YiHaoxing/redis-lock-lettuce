@@ -1,13 +1,11 @@
-package com.test.demo.redis;
+package com.demo.redis;
 
-import org.junit.runner.RunWith;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -18,9 +16,8 @@ import java.util.concurrent.TimeUnit;
  * 从Redis2.6.0版本开始,通过内置的Lua5.1解释器,可以使用EVAL命令对Lua脚本进行求值
  * @date 0:45 2019/6/29
  **/
-@SpringBootTest
-@RunWith(SpringRunner.class)
 @Component
+@Slf4j
 public class RedisLockUtils {
 
     @Autowired

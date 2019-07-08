@@ -1,7 +1,7 @@
-package com.test.demo.aspect;
+package com.demo.aspect;
 
-import com.test.demo.annotation.RedisLock;
-import com.test.demo.redis.RedisLockUtils;
+import com.demo.annotation.RedisLock;
+import com.demo.redis.RedisLockUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -25,7 +25,7 @@ public class RedisLockAspect {
     @Autowired
     private RedisLockUtils redisLockUtils;
 
-    @Pointcut("@annotation(com.test.demo.annotation.RedisLock)")
+    @Pointcut("@annotation(com.demo.annotation.RedisLock)")
     public void redisLockPointCut() {
     }
 
