@@ -1,6 +1,6 @@
 spring:
   redis:
-    host: 127.0.0.1
+    host: 120.55.40.51
     port: 6379
     #密码.没有设置Redis连接密码可以不配置
     password: foobared
