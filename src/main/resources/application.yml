@@ -3,7 +3,7 @@ spring:
     host: 120.55.40.51
     port: 6379
     #密码.没有设置Redis连接密码可以不配置
-    password: foobared
+    password: foobared123
     #SpringBoot2.x版本中,默认使用Lettuce;SpringBoot1.5版本默认使用Jedis
     lettuce:
       pool:
