@@ -84,7 +84,7 @@ public class RedisLockUtils {
      * @param [lockKey, value, expireTime]
      * @return boolean
      * @author YiHaoXing
-     * @description 使用LUA脚本获取锁, 原子操作
+     * @description 使用LUA脚本获取锁, 原子操作。过期时间单位为秒
      * @date 0:46 2019/6/29
      **/
     public boolean getLockByLua(String lockKey, String value, int expireTime) {

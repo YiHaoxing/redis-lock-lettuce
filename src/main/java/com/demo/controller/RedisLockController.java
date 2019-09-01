@@ -38,7 +38,7 @@ public class RedisLockController {
      * @param []
      * @return java.lang.String
      * @author YiHaoXing
-     * @description 方法代码里加锁
+     * @description 通过代码加锁,释放锁
      * @date 16:54 2019/6/30
      **/
     @GetMapping("/B")
@@ -56,18 +56,26 @@ public class RedisLockController {
         return "Hello World";
     }
 
-
+    /**
+     * @author YiHaoXing
+     * @description 通过LUA脚本加锁,释放锁.保证原子性
+     * @date 2019/9/2 0:19
+     * @param []
+     * @return java.lang.String
+     **/
     @GetMapping("/C")
     public String testRedisLock3() {
-        boolean lock = redisLockUtils.getLockByLua("G", "VALUE-G", 30000);
-        if (lock) {
+        //这里的过期时间以秒为单位
+        boolean lock = redisLockUtils.getLockByLua("G", "hahaha", 30);
+            if (lock) {
             try {
                 System.out.println(redisTemplate.opsForValue().get("G"));
             } catch (Exception e) {
                 //do something.
             } finally {
                 //释放锁
-                redisLockUtils.releaseLock("F", "VALUE-F");
+                boolean result = redisLockUtils.releaseLockByLua("G", "hahaha");
+                System.out.println(result);
             }
         }
         return "Hello World";
