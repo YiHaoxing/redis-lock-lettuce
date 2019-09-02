@@ -39,14 +39,14 @@ public class RedisLockUtils {
      * @date 0:45 2019/6/29
      **/
     public boolean getLock(String lockKey, String value, int expireTime) {
-        return redisTemplate.opsForValue().setIfAbsent(lockKey, value, expireTime, TimeUnit.MILLISECONDS);
+        return redisTemplate.opsForValue().setIfAbsent(lockKey, value, expireTime, TimeUnit.SECONDS);
     }
 
     /**
      * @param [lockKey, value]
      * @return boolean
      * @author YiHaoXing
-     * @description 非原子操作, 不推荐使用该方式释放锁
+     * @description 释放锁.非原子操作, 不推荐使用该方式释放锁
      * @date 0:44 2019/6/29
      **/
     public boolean releaseLock(String lockKey, String value) {

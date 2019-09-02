@@ -12,9 +12,9 @@ import java.lang.annotation.*;
 @Documented
 public @interface RedisLock {
     /**
-     * 锁的过期时间
+     * 锁的过期时间.以秒为单位
      */
-    int expireTime() default 1000;
+    int expireTime() default 60;
 
     String key() default "";
 

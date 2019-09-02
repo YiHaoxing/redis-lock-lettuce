@@ -24,13 +24,15 @@ public class RedisLockController {
     /**
      * @return java.lang.String
      * @author YiHaoXing
-     * @description 通过注解加锁
+     * @description 通过AOP加锁/释放锁
      * @date 23:55 2019/6/28
      **/
     @GetMapping("/A")
-    @RedisLock(key = "D", value = "VALUE-D", expireTime = 30000)
+    @RedisLock(key = "A", value = "aaa", expireTime = 30)
     public String testRedisLock1() {
-        System.out.println(redisTemplate.opsForValue().get("D"));
+        //获取到锁后才能走到这里执行业务逻辑
+        System.out.println(redisTemplate.opsForValue().get("A"));
+        //do something.
         return "Hello World";
     }
 
@@ -38,19 +40,21 @@ public class RedisLockController {
      * @param []
      * @return java.lang.String
      * @author YiHaoXing
-     * @description 通过代码加锁,释放锁
+     * @description 通过代码加锁/释放锁
      * @date 16:54 2019/6/30
      **/
     @GetMapping("/B")
     public String testRedisLock2() {
-        if (redisLockUtils.getLock("F", "VALUE-F", 10000)) {
+        if (redisLockUtils.getLock("B", "bbb", 30)) {
             try {
-                System.out.println(redisTemplate.opsForValue().get("F"));
+                //获取到锁后执行业务流程
+                System.out.println(redisTemplate.opsForValue().get("B"));
             } catch (Exception e) {
                 //do something.
             } finally {
                 //释放锁
-                redisLockUtils.releaseLock("F", "VALUE-F");
+                boolean result = redisLockUtils.releaseLock("B", "bbb");
+                System.out.println(result);
             }
         }
         return "Hello World";
@@ -58,23 +62,23 @@ public class RedisLockController {
 
     /**
      * @author YiHaoXing
-     * @description 通过LUA脚本加锁,释放锁.保证原子性
+     * @description 通过LUA脚本加锁/释放锁.保证原子性
      * @date 2019/9/2 0:19
      * @param []
      * @return java.lang.String
      **/
     @GetMapping("/C")
     public String testRedisLock3() {
-        //这里的过期时间以秒为单位
-        boolean lock = redisLockUtils.getLockByLua("G", "hahaha", 30);
-            if (lock) {
+        boolean lock = redisLockUtils.getLockByLua("C", "ccc", 30);
+        if (lock) {
             try {
-                System.out.println(redisTemplate.opsForValue().get("G"));
+                //获取到锁后执行业务流程
+                System.out.println(redisTemplate.opsForValue().get("C"));
             } catch (Exception e) {
                 //do something.
             } finally {
                 //释放锁
-                boolean result = redisLockUtils.releaseLockByLua("G", "hahaha");
+                boolean result = redisLockUtils.releaseLockByLua("C", "ccc");
                 System.out.println(result);
             }
         }
