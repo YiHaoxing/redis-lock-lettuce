@@ -16,7 +16,9 @@ public @interface RedisLock {
      */
     int expireTime() default 60;
 
-    String key() default "";
-
+    /**
+     * redis的key
+     * @return
+     */
     String value() default "";
 }

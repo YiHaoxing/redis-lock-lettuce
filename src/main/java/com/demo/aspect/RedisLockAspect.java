@@ -36,20 +36,30 @@ public class RedisLockAspect {
         Method method = signature.getMethod();
         RedisLock annotation = method.getAnnotation(RedisLock.class);
 
-        String key = annotation.key();
-        String value = annotation.value();
+        //锁的key
+        String key = annotation.value();
+        //过期时间
         int expireTime = annotation.expireTime();
+        //key对应的value.设置成这样可以避免释放掉其他线程加的锁.
+        String value = new StringBuilder().append(Thread.currentThread().getId()).append(Math.random()).toString();
 
-        //获取锁
-        boolean lock = redisLockUtils.getLock(key, value, expireTime);
-        if (lock) {
-            try {
+        boolean lock = false;
+        try {
+            //获取锁
+            lock = redisLockUtils.getLock(key, value, expireTime);
+            if (lock) {
+                log.info("获取锁成功,Thread:{}",Thread.currentThread().getId());
                 return proceedingJoinPoint.proceed();
-            } catch (Throwable throwable) {
-                throw throwable;
-            } finally {
-                //释放锁
+            } else {
+                log.info("获取锁失败,Thread:{}",Thread.currentThread().getId());
+            }
+        } catch (Throwable throwable) {
+            throw throwable;
+        } finally {
+            //释放锁
+            if(lock){
                 redisLockUtils.releaseLockByLua(key, value);
+                log.info("释放锁,thread:{}",Thread.currentThread().getId());
             }
         }
         return null;
