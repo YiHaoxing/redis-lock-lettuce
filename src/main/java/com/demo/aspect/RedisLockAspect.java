@@ -48,10 +48,10 @@ public class RedisLockAspect {
             //获取锁
             lock = redisLockUtils.getLock(key, value, expireTime);
             if (lock) {
-                log.info("获取锁成功,Thread:{}",Thread.currentThread().getId());
+                log.info("Thread:{}获取锁成功",Thread.currentThread().getId());
                 return proceedingJoinPoint.proceed();
             } else {
-                log.info("获取锁失败,Thread:{}",Thread.currentThread().getId());
+                log.info("Thread:{}获取锁失败",Thread.currentThread().getId());
             }
         } catch (Throwable throwable) {
             throw throwable;
@@ -59,7 +59,7 @@ public class RedisLockAspect {
             //释放锁
             if(lock){
                 redisLockUtils.releaseLockByLua(key, value);
-                log.info("释放锁,thread:{}",Thread.currentThread().getId());
+                log.info("Thread:{}释放锁",Thread.currentThread().getId());
             }
         }
         return null;

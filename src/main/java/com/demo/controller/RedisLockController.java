@@ -39,22 +39,22 @@ public class RedisLockController {
         boolean lock = false;
         try {
             lock = redisLockUtils.getLockByLua(key, value, 30);
-            //lock = redisLockUtils.getLock(key, value, 30);
             if(lock){
-                log.info("获取锁成功,Thread:{}",Thread.currentThread().getId());
+                log.info("Thread:{}获取锁成功",Thread.currentThread().getId());
+                log.info("Thread:{}执行业务逻辑中...",Thread.currentThread().getId());
                 Thread.sleep(5000);
             } else {
-                log.info("获取锁失败,Thread:{}",Thread.currentThread().getId());
+                log.info("Thread:{}获取锁失败",Thread.currentThread().getId());
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             if(lock){
                 redisLockUtils.releaseLockByLua(key, value);
-                log.info("释放锁,thread:{}",Thread.currentThread().getId());
+                log.info("Thread:{}释放锁",Thread.currentThread().getId());
             }
         }
-        return "thread1 over";
+        return "t1 over";
     }
     @GetMapping("/t2/{key}")
     public String test2(@PathVariable String key){
@@ -64,24 +64,25 @@ public class RedisLockController {
         try {
             lock = redisLockUtils.getLockByLua(key, value, 30);
             if(lock){
-                log.info("获取锁成功,Thread:{}",Thread.currentThread().getId());
+                log.info("Thread:{}获取锁成功",Thread.currentThread().getId());
+                log.info("Thread:{}执行业务逻辑中...",Thread.currentThread().getId());
                 Thread.sleep(5000);
             } else {
-                log.info("获取锁失败,Thread:{}",Thread.currentThread().getId());
+                log.info("Thread:{}获取锁失败",Thread.currentThread().getId());
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             if(lock){
                 redisLockUtils.releaseLockByLua(key, value);
-                log.info("释放锁,thread:{}",Thread.currentThread().getId());
+                log.info("Thread:{}释放锁",Thread.currentThread().getId());
             }
         }
-        return "thread2 over";
+        return "t2 over";
     }
 
 
-    private static final String LOCK_KEY = "TT";
+    public static final String LOCK_KEY = "T";
     /**
      * @author YiHaoXing
      * @description 通过注解加锁
